@@ -1,0 +1,94 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Questionnaire</title>
+
+    <link href="css/bootstrap.min.embed.css" rel="stylesheet" />
+    <link href="css/style.css" rel="stylesheet" />
+
+</head>
+<body>
+
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <button class="btn btn-success navbar-btn" onclick="SaveChanges()"><span class="glyphicon glyphicon-floppy-disk icon-large"></span><br />Save As</button>
+            <span style="margin: 0 4px"></span>
+            <button class="btn btn-info navbar-btn" onclick="print()"><span class="glyphicon glyphicon-print icon-large"></span><br />Print</button>
+        </div>
+    </nav>
+    <div class="container">
+
+        <h1>Questionnaire</h1>
+        <p>This is a simple proof of concept demonstrating a dynamic and self-contained single html file for use offline, that supports 'saving' with form values to the local machine.
+        This is intended to be used as an alternative to fillable PDF forms.</p>
+
+        <div class="callout callout-warning">
+            <h4>Instructions</h4>
+            <ul>
+                <li>Fill out short the questionnaire below</li>
+                <li>Click the 'Save As' button above</li>
+                <li>Save to your local machine</li>
+                <li>Open the file</li>
+                <li>With any luck the questionnaire should have the values you entered</li>
+            </ul>
+        </div>
+
+        <div id="introduction">
+            <form class="form-horizontal">
+                <fieldset>
+                    <legend>Introduction</legend>
+                    <div class="form-group">
+                        <label for="inputName" class="col-sm-2 control-label">Your Name: </label>
+                        <div class="col-sm-4">
+                            <input type="text" id="inputName" placeholder="Your name here…" class="form-control" data-bind="value: Name">
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+        <div id="questions-container" data-bind="template: {name: 'question-template'}"></div>
+
+    </div>
+
+    <footer></footer>
+
+    <!-- scripts concatenated and minified via build script -->
+    <script type="text/template" id="question-template">
+        <div data-bind="foreach: Questions" id="questions">
+            <div data-bind="visible: Visible">
+                <form class="form">
+                    <fieldset>
+                        <legend data-bind="text: 'Question ' + QuestionId + '.'"></legend>
+
+                        <p data-bind="text: Text"></p>
+
+                        <div data-bind="foreach: Choices">
+                            <label class="radio checkbox">
+                                <!-- ko if: $parent.Multiple -->
+                                <input type="checkbox" data-bind="checked: $parent.Answer, checkedValue: ChoiceId, attr: { name: $parent.QuestionId }">
+                                <!-- /ko -->
+                                <!-- ko ifnot: $parent.Multiple -->
+                                <input type="radio" data-bind="checked: $parent.Answer, checkedValue: ChoiceId, attr: { name: $parent.QuestionId }">
+                                <!-- /ko -->
+                                <span data-bind="text: Text"></span>
+                            </label>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </script>
+    <script src="js/libs/knockout-3.0.0.js"></script>
+    <script src="js/libs/FileSaver.js"></script>
+    <script src="js/libs/jquery-1.7.1.js"></script>
+    <script src="js/model.js"></script>
+    <script src="js/site.js"></script>
+    <script type="text/javascript" id="model-data"></script>
+
+    <!-- end scripts -->
+</body>
+</html>
